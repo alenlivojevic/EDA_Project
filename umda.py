@@ -19,7 +19,6 @@ class UMDA:
         # item_probability_vector neka bude matrica koja sadrzi u redovima poziciju u stringu, a u stupcima 
         # lokacija i,j govori kolika je vjerojatnost da se slovo i pojavi na mjestu j
 
-        print("Generating single solution...")
         string = []
         for i in range(max_string_size):
             roulette_wheel = np.cumsum(
@@ -30,8 +29,37 @@ class UMDA:
                 if random_number <= score:
                     string.append(alphabet[index])
                     break
-        print(string)
-        return self.Solution(string, self.fitness_function())
+        return self.Solution(string, self.fitness_function(string))
     
-    def calculate(self, probability_vector):
-        single_solution = self.generate_single_solution(probability_vector, self.max_string_size, self.alphabet)
+    def generate_random_population(self):
+        probability_vector = np.full((self.max_string_size, len(self.alphabet)), 1/len(self.alphabet))
+       # probability_vector = [[1, 0, 0, 0],
+        #                      [0.25, 0.25, 0.25, 0.25],
+         #                     [0.25, 0.25, 0.25, 0.25],
+          #                    [0.25, 0.25, 0.25, 0.25]]
+ 
+        return [self.generate_single_solution(probability_vector, self.max_string_size, self.alphabet) for _ in range(self.population_size)]
+    
+    def parent_selection(self, population):
+        population.sort(key=lambda x: x.fitness, reverse=True)
+        return population[:self.parent_size]
+    
+    def calculate(self):
+        population = self.generate_random_population()
+        
+        for _ in range(self.num_generations):
+            parents = self.parent_selection(population)
+            
+        for curr in population:
+            print("Populacija je:")
+            print(curr.string)
+            print(curr.fitness)
+
+        print("Roditelji su:")
+        print("-------------------------------------------")
+
+        for curr in parents:    
+            print(curr.string)
+            print(curr.fitness)
+              
+        

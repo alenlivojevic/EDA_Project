@@ -1,14 +1,19 @@
 from umda import UMDA
 import numpy as np
 
-NUM_GENERATIONS = 20
-POPULATION_SIZE = 50 #400
+NUM_GENERATIONS = 1
+POPULATION_SIZE = 4 #400
 OFFSPRING_SIZE = 10 #30
 BAG_WEIGHT = 500 # 800
-PARENT_SIZE = 10 #30
+PARENT_SIZE = 2 #30
 MAX_STRING_SIZE = 4
 APLHABET = ["a", "b", "c", "d"]
-PROBABILITY_VECTOR = np.full((4, 4), 0.25)
+
+def fitness_function(string):
+    zbroj = 0
+    for znak in string:
+        zbroj += ord(znak)
+    return zbroj
 
 def main():
     global ITEMS
@@ -26,10 +31,8 @@ def main():
     )
 
     #print(PROBABILITY_VECTOR)
-    umda.calculate(PROBABILITY_VECTOR)
+    umda.calculate()
 
-def fitness_function():
-    return
 
 if __name__ == "__main__":
     main()
