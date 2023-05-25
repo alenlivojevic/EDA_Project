@@ -6,7 +6,7 @@ class UMDA:
             self.string = string
             self.fitness = fitness
 
-    def __init__(self, fitness_function, num_generations, population_size, parent_size, offspring_size, max_string_size, alphabet) -> None:
+    def __init__(self, fitness_function, num_generations, population_size, parent_size, offspring_size, max_string_size, alphabet, probability_vector, freq) -> None:
         self.num_generations = num_generations
         self.fitness_function = fitness_function
         self.offspring_size = offspring_size
@@ -14,31 +14,37 @@ class UMDA:
         self.population_size = population_size
         self.max_string_size = max_string_size
         self.alphabet = alphabet
+        self.probability_vector = probability_vector
+        self.freq = freq
 
-    def generate_single_solution(self, item_probability_vector, max_string_size, alphabet) -> Solution:
+    def generate_single_solution(self) -> Solution:
         # item_probability_vector neka bude matrica koja sadrzi u redovima poziciju u stringu, a u stupcima 
         # lokacija i,j govori kolika je vjerojatnost da se slovo i pojavi na mjestu j
 
         string = []
-        for i in range(max_string_size):
+        for i in range(self.max_string_size):
             roulette_wheel = np.cumsum(
-            item_probability_vector[i]
+            self.probability_vector[i]
             )
             random_number = np.random.rand()
             for index, score in enumerate(roulette_wheel):
                 if random_number <= score:
-                    string.append(alphabet[index])
+                    string.append(self.alphabet[index])
                     break
         return self.Solution(string, self.fitness_function(string))
     
+    """ def update_frequences():
+    
+        return """
+    
     def generate_random_population(self):
-        probability_vector = np.full((self.max_string_size, len(self.alphabet)), 1/len(self.alphabet))
+        
        # probability_vector = [[1, 0, 0, 0],
         #                      [0.25, 0.25, 0.25, 0.25],
          #                     [0.25, 0.25, 0.25, 0.25],
           #                    [0.25, 0.25, 0.25, 0.25]]
  
-        return [self.generate_single_solution(probability_vector, self.max_string_size, self.alphabet) for _ in range(self.population_size)]
+        return [self.generate_single_solution() for _ in range(self.population_size)]
     
     def parent_selection(self, population):
         population.sort(key=lambda x: x.fitness, reverse=True)

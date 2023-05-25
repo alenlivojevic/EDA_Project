@@ -8,6 +8,8 @@ BAG_WEIGHT = 500 # 800
 PARENT_SIZE = 2 #30
 MAX_STRING_SIZE = 4
 APLHABET = ["a", "b", "c", "d"]
+PROBABILITY_VECTOR = np.full((MAX_STRING_SIZE, len(APLHABET)), 1/len(APLHABET))
+FREQ = np.full((MAX_STRING_SIZE, len(APLHABET)), 1)
 
 def fitness_function(string):
     zbroj = 0
@@ -27,7 +29,9 @@ def main():
         PARENT_SIZE,
         OFFSPRING_SIZE,
         MAX_STRING_SIZE,
-        APLHABET
+        APLHABET,
+        PROBABILITY_VECTOR,
+        FREQ
     )
 
     #print(PROBABILITY_VECTOR)
