@@ -33,16 +33,15 @@ class UMDA:
                     break
         return self.Solution(string, self.fitness_function(string))
     
-    """ def update_frequences():
+    def update_frequences(self, parents):
+        for parent in parents:
+            for position in range(len(parent.string)):
+                self.freq[position][self.alphabet.index(parent.string[position])] += 1
+        print(self.freq)
+
     
-        return """
     
     def generate_random_population(self):
-        
-       # probability_vector = [[1, 0, 0, 0],
-        #                      [0.25, 0.25, 0.25, 0.25],
-         #                     [0.25, 0.25, 0.25, 0.25],
-          #                    [0.25, 0.25, 0.25, 0.25]]
  
         return [self.generate_single_solution() for _ in range(self.population_size)]
     
@@ -55,6 +54,7 @@ class UMDA:
         
         for _ in range(self.num_generations):
             parents = self.parent_selection(population)
+            self.update_frequences(parents)
             
         for curr in population:
             print("Populacija je:")

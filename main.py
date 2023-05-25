@@ -9,6 +9,10 @@ PARENT_SIZE = 2 #30
 MAX_STRING_SIZE = 4
 APLHABET = ["a", "b", "c", "d"]
 PROBABILITY_VECTOR = np.full((MAX_STRING_SIZE, len(APLHABET)), 1/len(APLHABET))
+""" PROBABILITY_VECTOR = [[1, 0, 0, 0],
+                      [0.25, 0.25, 0.25, 0.25],
+                      [0.25, 0.25, 0.25, 0.25],
+                      [0.25, 0.25, 0.25, 0.25]] """
 FREQ = np.full((MAX_STRING_SIZE, len(APLHABET)), 1)
 
 def fitness_function(string):
