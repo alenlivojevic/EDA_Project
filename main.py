@@ -1,33 +1,51 @@
 from umda import UMDA
 import numpy as np
+from matplotlib import pyplot as plt
 
-NUM_GENERATIONS = 5
-POPULATION_SIZE = 4 #400
-OFFSPRING_SIZE = 5 #30
-BAG_WEIGHT = 500 # 800
-PARENT_SIZE = 2 #30
-MAX_STRING_SIZE = 4
-APLHABET = ["a", "b", "c", "d"]
+NUM_GENERATIONS = 20
+POPULATION_SIZE = 20 #400
+OFFSPRING_SIZE = 15 #30
+PARENT_SIZE = 7 #30
+MAX_STRING_SIZE = 50
+MIN_STRING_SIZE = 30
+APLHABET = ["A", "R", "N", "D", "C"]
 PROBABILITY_VECTOR = np.full((MAX_STRING_SIZE, len(APLHABET)), 1/len(APLHABET))
-""" PROBABILITY_VECTOR = [[1, 0, 0, 0],
-                      [0.25, 0.25, 0.25, 0.25],
-                      [0.25, 0.25, 0.25, 0.25],
-                      [0.25, 0.25, 0.25, 0.25]] """
 FREQ = np.full((MAX_STRING_SIZE, len(APLHABET)), 1)
+
+""" NUM_GENERATIONS = 50
+POPULATION_SIZE = 20 #400
+OFFSPRING_SIZE = 10 #30
+PARENT_SIZE = 4 #30
+MAX_STRING_SIZE = 50
+MIN_STRING_SIZE = 20
+APLHABET = ["A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V"]
+PROBABILITY_VECTOR = np.full((MAX_STRING_SIZE, len(APLHABET)), 1/len(APLHABET))
+FREQ = np.full((MAX_STRING_SIZE, len(APLHABET)), 1) """
 
 def fitness_function(string):
     zbroj = 0
     for znak in string:
         #zbroj += ord(znak)
-        if(znak == 'a'):
+        if(znak == 'A'):
             zbroj += 10
-        elif(znak == 'b'):
+        elif(znak == 'R'):
             zbroj += 5
-        elif(znak == 'c'):
+        elif(znak == 'N'):
             zbroj += 2
-        elif(znak == 'd'):
+        elif(znak == 'D'):
             zbroj += 1
+        else:
+            zbroj += 0
     return zbroj
+
+def plot_fitness(fitness_values, title):
+    plt.figure()
+    x = [i for i in range(NUM_GENERATIONS)]
+    plt.title(title)
+    plt.xlabel("Generation")
+    plt.ylabel("Fitness")
+    plt.plot(fitness_values)
+    plt.show()
 
 def main():
     global ITEMS
@@ -41,13 +59,16 @@ def main():
         PARENT_SIZE,
         OFFSPRING_SIZE,
         MAX_STRING_SIZE,
+        MIN_STRING_SIZE,
         APLHABET,
         PROBABILITY_VECTOR,
         FREQ
     )
 
     #print(PROBABILITY_VECTOR)
-    umda.calculate()
+    values_umda = umda.calculate()
+    umda_plot = [(solution.fitness) for solution in values_umda]
+    plot_fitness(umda_plot, "UMDA")
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class UMDA:
     class Solution:
@@ -6,13 +7,14 @@ class UMDA:
             self.string = string
             self.fitness = fitness
 
-    def __init__(self, fitness_function, num_generations, population_size, parent_size, offspring_size, max_string_size, alphabet, probability_vector, freq) -> None:
+    def __init__(self, fitness_function, num_generations, population_size, parent_size, offspring_size, max_string_size, min_string_size, alphabet, probability_vector, freq) -> None:
         self.num_generations = num_generations
         self.fitness_function = fitness_function
         self.offspring_size = offspring_size
         self.parent_size = parent_size
         self.population_size = population_size
         self.max_string_size = max_string_size
+        self.min_string_size = min_string_size
         self.alphabet = alphabet
         self.probability_vector = probability_vector
         self.freq = freq
@@ -22,7 +24,8 @@ class UMDA:
         # lokacija i,j govori kolika je vjerojatnost da se slovo i pojavi na mjestu j
 
         string = []
-        for i in range(self.max_string_size):
+        string_size = random.randint(self.min_string_size,self.max_string_size)
+        for i in range(string_size):
             roulette_wheel = np.cumsum(
             self.probability_vector[i]
             )
@@ -39,6 +42,8 @@ class UMDA:
                 self.freq[position][self.alphabet.index(parent.string[position])] += 1
 
     def update_probability_vector(self):
+        #print("PROBABILITY IDE DO:")
+        print(self.max_string_size)
         for index in range(self.max_string_size):
             self.probability_vector[index] = self.freq[index] / np.sum(self.freq[index])
 
@@ -106,6 +111,8 @@ class UMDA:
         for curr in best_results:
             print(curr.string)
             print(curr.fitness)
+
+        return best_results
 
 
         
