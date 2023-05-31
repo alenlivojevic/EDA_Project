@@ -37,7 +37,10 @@ class UMDA:
         for parent in parents:
             for position in range(len(parent.string)):
                 self.freq[position][self.alphabet.index(parent.string[position])] += 1
-        print(self.freq)
+
+    def update_probability_vector(self):
+        for index in range(self.max_string_size):
+            self.probability_vector[index] = self.freq[index] / np.sum(self.freq[index])
 
     
     
@@ -49,23 +52,60 @@ class UMDA:
         population.sort(key=lambda x: x.fitness, reverse=True)
         return population[:self.parent_size]
     
+    def generate_offspring(self):
+        offspring = []
+        for _ in range(self.offspring_size):
+            new_individual = self.generate_single_solution()
+            offspring.append(new_individual)
+            
+
+        return offspring
+    
     def calculate(self):
         population = self.generate_random_population()
-        
+        best_results = []
         for _ in range(self.num_generations):
             parents = self.parent_selection(population)
             self.update_frequences(parents)
+            self.update_probability_vector()
+            # generate offspring (and new individual)
+            offspring = self.generate_offspring()
+            population += offspring
+            population.sort(key=lambda x: x.fitness, reverse=True)
+            population = population[:self.population_size]
+            best_results.append(population[0])
             
-        for curr in population:
             print("Populacija je:")
-            print(curr.string)
-            print(curr.fitness)
+            for curr in population:
+                print(curr.string)
+                print(curr.fitness)
 
-        print("Roditelji su:")
+            print("-------------------------------------------")
+            print("Roditelji su:")  
+
+            for curr in parents:    
+                print(curr.string)
+                print(curr.fitness)
+            
+            print("Freq:")
+            print(self.freq)
+            
+            print("Probability_vector:")
+            print(self.probability_vector)
+            print("-------------------------------------------")
+
+            print("Potomstvo je:")
+            for curr in offspring:
+                print(curr.string)
+                print(curr.fitness)
+        
+        print("-------------------------------------------")
         print("-------------------------------------------")
 
-        for curr in parents:    
+        print("NAJBOLJI REZULTATI:")
+        for curr in best_results:
             print(curr.string)
             print(curr.fitness)
-              
+
+
         

@@ -1,9 +1,9 @@
 from umda import UMDA
 import numpy as np
 
-NUM_GENERATIONS = 1
+NUM_GENERATIONS = 5
 POPULATION_SIZE = 4 #400
-OFFSPRING_SIZE = 10 #30
+OFFSPRING_SIZE = 5 #30
 BAG_WEIGHT = 500 # 800
 PARENT_SIZE = 2 #30
 MAX_STRING_SIZE = 4
@@ -18,7 +18,15 @@ FREQ = np.full((MAX_STRING_SIZE, len(APLHABET)), 1)
 def fitness_function(string):
     zbroj = 0
     for znak in string:
-        zbroj += ord(znak)
+        #zbroj += ord(znak)
+        if(znak == 'a'):
+            zbroj += 10
+        elif(znak == 'b'):
+            zbroj += 5
+        elif(znak == 'c'):
+            zbroj += 2
+        elif(znak == 'd'):
+            zbroj += 1
     return zbroj
 
 def main():
