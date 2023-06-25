@@ -2,14 +2,15 @@ from umda import UMDA
 from bmda import BMDA
 import numpy as np
 from matplotlib import pyplot as plt
+from fitness_evaluator import FitnessEvaluator
 
-NUM_GENERATIONS = 30
-POPULATION_SIZE = 10 #400
-OFFSPRING_SIZE = 4 #30
-PARENT_SIZE = 3 #30
-MAX_STRING_SIZE = 8
-MIN_STRING_SIZE = 6
-APLHABET = ["A", "R", "N", "D", "C"]
+NUM_GENERATIONS = 200
+POPULATION_SIZE = 20 #400
+OFFSPRING_SIZE = 10 #30
+PARENT_SIZE = 5 #30
+MAX_STRING_SIZE = 50
+MIN_STRING_SIZE = 30
+APLHABET = ["A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V"]
 PROBABILITY_VECTOR = np.full((MAX_STRING_SIZE, len(APLHABET)), 1/len(APLHABET))
 FREQ = np.full((MAX_STRING_SIZE, len(APLHABET)), 1)
 
@@ -22,7 +23,7 @@ MIN_STRING_SIZE = 20
 APLHABET = ["A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V"]
 PROBABILITY_VECTOR = np.full((MAX_STRING_SIZE, len(APLHABET)), 1/len(APLHABET))
 FREQ = np.full((MAX_STRING_SIZE, len(APLHABET)), 1) """
-
+"""
 def fitness_function(string):
     zbroj = 0
     for znak in string:
@@ -38,7 +39,7 @@ def fitness_function(string):
         else:
             zbroj += 0
     return zbroj
-
+"""
 def plot_fitness(fitness_values, title):
     plt.figure()
     x = [i for i in range(NUM_GENERATIONS)]
@@ -52,9 +53,12 @@ def main():
     global ITEMS
    # current_dir = os.path.dirname(__file__)
     
-    """
+    fitness_evaluator = FitnessEvaluator(dataset="avpdb.csv", model_type="seqprops")
+    fitness_evaluator.init()
+
+
     umda = UMDA(
-        fitness_function,
+        fitness_evaluator,
         NUM_GENERATIONS,
         POPULATION_SIZE,
         PARENT_SIZE,
@@ -89,6 +93,6 @@ def main():
     bmda_plot = [(solution.fitness) for solution in values_bmda]
     plot_fitness(bmda_plot, "BMDA")
 
-
+"""
 if __name__ == "__main__":
     main()
