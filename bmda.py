@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-class UMDA:
+class BMDA:
     class Solution:
         def __init__(self, string, fitness) -> None:
             self.string = string
@@ -18,6 +18,8 @@ class UMDA:
         self.alphabet = alphabet
         self.probability_vector = probability_vector
         self.freq = freq
+        self.probability_vector_array = np.empty((len(alphabet)+1, self.max_string_size, len(alphabet)))
+        self.freq_array = np.empty((len(alphabet)+1, self.max_string_size, len(alphabet)))
 
     def generate_single_solution(self) -> Solution:
         # item_probability_vector neka bude matrica koja sadrzi u redovima poziciju u stringu, a u stupcima 
@@ -26,8 +28,13 @@ class UMDA:
         string = []
         string_size = random.randint(self.min_string_size,self.max_string_size)
         for i in range(string_size):
+            #što ako se generira prvo slovo?
+            if (i == 0):
+                first_dimension = len(self.alphabet)
+            else:
+                first_dimension = self.alphabet.index(string[i-1])
             roulette_wheel = np.cumsum(
-            self.probability_vector[i]
+            self.probability_vector_array[first_dimension][i]
             )
             random_number = np.random.rand()
             for index, score in enumerate(roulette_wheel):
@@ -37,19 +44,31 @@ class UMDA:
         return self.Solution(string, self.fitness_function(string))
     
     def update_frequences(self, parents):
+        #što ako nema prethodnog slova?
+        #uvedi varijablu first_dimension ili u slucaju prvog slova neka prethodno bude isto to
         for parent in parents:
             for position in range(len(parent.string)):
-                self.freq[position][self.alphabet.index(parent.string[position])] += 1
+                if (position == 0):
+                    first_dimension = len(self.alphabet)
+                else:
+                    first_dimension = self.alphabet.index(parent.string[position-1])
+                self.freq_array[first_dimension][position][self.alphabet.index(parent.string[position])] += 1
+                
 
     def update_probability_vector(self):
         #print("PROBABILITY IDE DO:")
         #print(self.max_string_size)
-        for index in range(self.max_string_size):
-            self.probability_vector[index] = self.freq[index] / np.sum(self.freq[index])
+        for previous in range(len(self.alphabet)+1):
+            for index in range(self.max_string_size):
+                self.probability_vector_array[previous][index] = self.freq_array[previous][index] / np.sum(self.freq_array[previous][index])
 
     
     
     def generate_random_population(self):
+        #stvaranje polja matrica vjerojatnosti i frekvencija
+        for i in range (len(self.alphabet) + 1):
+            self.probability_vector_array[i] = self.probability_vector
+            self.freq_array[i] = self.freq
  
         return [self.generate_single_solution() for _ in range(self.population_size)]
     
@@ -93,10 +112,12 @@ class UMDA:
                 print(curr.fitness)
             
             print("Freq:")
-            print(self.freq)
+            for matrix in self.freq_array:
+                print(matrix)
             
-            print("Probability_vector:")
-            print(self.probability_vector)
+            print("Probability_vector_array:")
+            for matrix in self.probability_vector_array:
+                print(matrix)
             print("-------------------------------------------")
 
             print("Potomstvo je:")
